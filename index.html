@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style media="screen">
+    html {
+      background-color: #333334
+    }
+    canvas {
+      background-color: #444445
+    }
+  </style>
+</head>
+<body>
+  <canvas width="300" height="300"></canvas>
+  <script type="text/javascript">
+    const ctx = document.querySelector("canvas").getContext("2d");
+    console.log(ctx);
+
+    const image = new Image();
+    image.onload = runTest;
+    image.src = "out.png"
+
+    function drawSection(tilesheet, srcRect, destRect, fgc, bgc){
+      ctx.clearRect(destRect.x, destRect.y, destRect.width, destRect.height);
+      ctx.drawImage(tilesheet, srcRect.x, srcRect.y, srcRect.width, srcRect.height, destRect.x, destRect.y, destRect.width, destRect.height);
+      ctx.globalCompositeOperation = "xor"
+      ctx.fillStyle=fgc;
+      ctx.fillRect(destRect.x,destRect.y, destRect.width, destRect.height)
+
+      ctx.globalCompositeOperation = "destination-over"
+      ctx.fillStyle=bgc;
+      ctx.fillRect(destRect.x,destRect.y, destRect.width, destRect.height)
+    }
+
+    const aCode = 'a'.charCodeAt(0);
+    const zCode = 'z'.charCodeAt(0);
+    const ACode = 'A'.charCodeAt(0);
+    const ZCode = 'Z'.charCodeAt(0);
+
+    const letterToRect = (letter) => {
+      const rect = Rect(0,0,9,9);
+      const code = letter.length > 0 ? letter.charCodeAt(0) : 0;
+      if(code >= aCode && code <= zCode){
+        rect.x = (code - aCode) * 10;
+        rect.y = 40
+      } else if(code >= ACode && code <= ZCode){
+        rect.x = (code - ACode) * 10;
+        rect.y = 30
+      }
+      console.log(code);
+      return rect;
+    }
+
+    const Rect = (x,y,width,height) => { return {x,y,width,height}};
+    const testText = "This is not the last time";
+    function runTest(){
+      ctx.drawImage(this, 0, 250)
+
+      for(var i = 0; i < testText.length; i++){
+          drawSection(this, letterToRect(testText[i]), Rect(i * 10,0,10,10), "#CCCCCC", "#333333");
+      }
+    }
+  </script>
+</body>
+</html>
