@@ -15,8 +15,10 @@
   </style>
 </head>
 <body>
-  <canvas width="300" height="300"></canvas>
+  <canvas width="600" height="300"></canvas>
   <script type="text/javascript">
+
+    // TODO: BUILD A CHARACTER_HELPER for non-keyboard characters
     const ctx = document.querySelector("canvas").getContext("2d");
     console.log(ctx);
 
@@ -40,28 +42,217 @@
     const zCode = 'z'.charCodeAt(0);
     const ACode = 'A'.charCodeAt(0);
     const ZCode = 'Z'.charCodeAt(0);
+    const zeroCode = '0'.charCodeAt(0);
+    const nineCode = '9'.charCodeAt(0);
+    const imageWidth = 320;
+    const letterWidth = 10;
+    const letterHeight = 10;
+    const imageHeight = 80;
+    
+    const spaceCode = ' '.charCodeAt(0);
+    const questionMarkCode = '?'.charCodeAt(0);
+    const atMarkCode = '@'.charCodeAt(0);
+    const leftSquareBracketCode = '['.charCodeAt(0);
+    const backTickCode = '`'.charCodeAt(0);
+
+    const leftCurlyBracketCode = '{'.charCodeAt(0);
+    const tildeCode = '~'.charCodeAt(0);
+    const lightFieldCode = '░'.charCodeAt(0);
+    const darkFieldCode = '▓'.charCodeAt(0)
 
     const letterToRect = (letter) => {
-      const rect = Rect(0,0,9,9);
-      const code = letter.length > 0 ? letter.charCodeAt(0) : 0;
-      if(code >= aCode && code <= zCode){
-        rect.x = (code - aCode) * 10;
-        rect.y = 40
-      } else if(code >= ACode && code <= ZCode){
-        rect.x = (code - ACode) * 10;
-        rect.y = 30
-      }
+      // letters and numbers
+      const rect = Rect(0,0,10,10);
+      const code = letter.length > 0 ? letter.charCodeAt(0) : spaceCode; // DEFAULT TO SPACE
+      
       console.log(code);
+      if(spaceCode <= code && code <= questionMarkCode){
+        rect.x = (code - spaceCode) * letterWidth;
+        rect.y = 0;
+      }
+      else if(code === atMarkCode){
+        rect.x = 0;
+        rect.y = 10;
+      } else if(leftSquareBracketCode <= code && code <= backTickCode){
+        rect.x = (code - leftSquareBracketCode + 1) * letterWidth
+        rect.y = 10;
+      } else if(leftCurlyBracketCode <= code && code <= tildeCode){
+        rect.x = (code - leftCurlyBracketCode + 7) * letterWidth
+        rect.y = 10;
+      } else if(lightFieldCode <= code && code <= darkFieldCode){
+        rect.x = (code - lightFieldCode + 11) * letterWidth
+        rect.y = 10;
+      }
+      // Now let's do the direction pieces
+      // single length
+      else if(code === '│'.charCodeAt(0)){
+        rect.x = (14) * letterWidth
+        rect.y = 10;
+      }
+      else if(code === '─'.charCodeAt(0)){
+        rect.x = (15) * letterWidth
+        rect.y = 10;
+      }
+      else if(code === '┼'.charCodeAt(0)){
+        rect.x = (16) * letterWidth
+        rect.y = 10;
+      } else if(code === '┤'.charCodeAt(0)){
+        rect.x = (17) * letterWidth
+        rect.y = 10;
+      }
+      else if(code === '┴'.charCodeAt(0)){
+        rect.x = (18) * letterWidth
+        rect.y = 10;
+      }
+      else if(code === '├'.charCodeAt(0)){
+        rect.x = (19) * letterWidth
+        rect.y = 10;
+      }
+      else if(code === '┬'.charCodeAt(0)){
+        rect.x = (20) * letterWidth
+        rect.y = 10;
+      }
+      else if(code === '└'.charCodeAt(0)){
+        rect.x = (21) * letterWidth
+        rect.y = 10;
+      }else if(code === '┌'.charCodeAt(0)){
+        rect.x = (22) * letterWidth
+        rect.y = 10;
+      }else if(code === '┐'.charCodeAt(0)){
+        rect.x = (23) * letterWidth
+        rect.y = 10;
+      }else if(code === '┘'.charCodeAt(0)){
+        rect.x = (24) * letterWidth
+        rect.y = 10;
+      }
+     
+      // arrows
+      else if(code == '↑'.charCodeAt(0)){
+        rect.x = (0) * letterWidth;
+        rect.y = 2 * letterHeight;
+      } else if(code == '↓'.charCodeAt(0)){
+        rect.x = (1) * letterWidth;
+        rect.y = 2 * letterHeight;
+      } else if(code == '←'.charCodeAt(0)){
+        rect.x = (2) * letterWidth;
+        rect.y = 2 * letterHeight;
+      } else if(code == '→'.charCodeAt(0)){
+        rect.x = (3) * letterWidth;
+        rect.y = 2 * letterHeight;
+      }
+
+      // triangle arrows
+      else if(code == '▲'.charCodeAt(0)){
+        rect.x = (4) * letterWidth;
+        rect.y = 2 * letterHeight;
+      } else if(code == '▼'.charCodeAt(0)){
+        rect.x = (5) * letterWidth;
+        rect.y = 2 * letterHeight;
+      } else if(code == '◄'.charCodeAt(0)){
+        rect.x = (6) * letterWidth;
+        rect.y = 2 * letterHeight;
+      } else if(code == '►'.charCodeAt(0)){
+        rect.x = (7) * letterWidth;
+        rect.y = 2 * letterHeight;
+      }
+      
+
+      // double headed arrow
+      else if(code == '↕'.charCodeAt(0)){
+        rect.x = (8) * letterWidth;
+        rect.y = 2 * letterHeight;
+      }
+      else if(code == '↔'.charCodeAt(0)){
+        rect.x = (9) * letterWidth;
+        rect.y = 2 * letterHeight;
+      }
+      
+
+      // checkboxes
+      else if (code == '☐'.charCodeAt(0)){
+        rect.x = (10) * letterWidth;
+        rect.y = 2 * letterHeight;
+      }
+      else if (code == '☑'.charCodeAt(0)){
+        rect.x = (11) * letterWidth;
+        rect.y = 2 * letterHeight;
+      }
+      else if (code == '◯'.charCodeAt(0)){
+        rect.x = (12) * letterWidth + 1;
+        rect.width = 9;
+        rect.y = 2 * letterHeight + 1;
+        rect.height = 9;
+      }
+      else if (code == '◉'.charCodeAt(0)){
+        rect.x = (13) * letterWidth + 1;
+        rect.width = 9;
+        rect.y = 2 * letterHeight + 1;
+        rect.height = 9;
+      }
+
+      // double length
+      else if(code === '║'.charCodeAt(0)){
+        rect.x = (14) * letterWidth
+        rect.y = 20;
+      }
+      else if(code === '═'.charCodeAt(0)){
+        rect.x = (15) * letterWidth
+        rect.y = 20;
+      }
+      else if(code === '╬'.charCodeAt(0)){
+        rect.x = (16) * letterWidth
+        rect.y = 20;
+      } else if(code === '╣'.charCodeAt(0)){
+        rect.x = (17) * letterWidth
+        rect.y = 20;
+      }
+      else if(code === '╩'.charCodeAt(0)){
+        rect.x = (18) * letterWidth
+        rect.y = 20;
+      }
+      else if(code === '╠'.charCodeAt(0)){
+        rect.x = (19) * letterWidth
+        rect.y = 20;
+      }
+      else if(code === '╦'.charCodeAt(0)){
+        rect.x = (20) * letterWidth
+        rect.y = 20;
+      }
+      else if(code === '╚'.charCodeAt(0)){
+        rect.x = (21) * letterWidth
+        rect.y = 20;
+      }else if(code === '╔'.charCodeAt(0)){
+        rect.x = (22) * letterWidth
+        rect.y = 20;
+      }else if(code === '╗'.charCodeAt(0)){
+        rect.x = (23) * letterWidth
+        rect.y = 20;
+      }else if(code === '╝'.charCodeAt(0)){
+        rect.x = (24) * letterWidth
+        rect.y = 20;
+      } else if (ACode <= code && code <= ZCode){
+        rect.x = (code - ACode) * letterWidth;
+        rect.y = 30;
+      }
+      else if (aCode <= code && code <= zCode){
+        rect.x = (code - aCode) * letterWidth;
+        rect.y = 40;
+      }
+
+      // TODO: Missing checkboxes and circles      
+      
+
       return rect;
     }
 
+
     const Rect = (x,y,width,height) => { return {x,y,width,height}};
-    const testText = "This is not the last time";
+    const testText = " ↑ ↓ ← → ↕ ↔ ▲ ▼ ◄ ► ◯ ◉";
     function runTest(){
       ctx.drawImage(this, 0, 250)
 
       for(var i = 0; i < testText.length; i++){
-          drawSection(this, letterToRect(testText[i]), Rect(i * 10,0,10,10), "#CCCCCC", "#333333");
+          drawSection(this, letterToRect(testText[i]), Rect(i * 10,0,10,10), "#CCCCCC", "#3333FF");
       }
     }
   </script>
